@@ -777,7 +777,14 @@ func listChangesetOptsFromArgs(args *graphqlbackend.ListChangesetsArgs, batchCha
 }
 
 func (r *Resolver) CloseCampaign(ctx context.Context, args *graphqlbackend.CloseCampaignArgs) (_ graphqlbackend.BatchChangeResolver, err error) {
-	tr, ctx := trace.New(ctx, "Resolver.CloseCampaign", fmt.Sprintf("Campaign: %q", args.Campaign))
+	return r.CloseBatchChange(ctx, &graphqlbackend.CloseBatchChangeArgs{
+		BatchChange:     args.Campaign,
+		CloseChangesets: args.CloseChangesets,
+	})
+}
+
+func (r *Resolver) CloseBatchChange(ctx context.Context, args *graphqlbackend.CloseBatchChangeArgs) (_ graphqlbackend.BatchChangeResolver, err error) {
+	tr, ctx := trace.New(ctx, "Resolver.CloseBatchChange", fmt.Sprintf("BatchChange: %q", args.BatchChange))
 	defer func() {
 		tr.SetError(err)
 		tr.Finish()
@@ -787,7 +794,7 @@ func (r *Resolver) CloseCampaign(ctx context.Context, args *graphqlbackend.Close
 		return nil, err
 	}
 
-	batchChangeID, err := unmarshalBatchChangeID(args.Campaign)
+	batchChangeID, err := unmarshalBatchChangeID(args.BatchChange)
 	if err != nil {
 		return nil, errors.Wrap(err, "unmarshaling campaign id")
 	}

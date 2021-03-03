@@ -9423,7 +9423,7 @@ extend type Mutation {
     """
     Move a campaign to a different namespace, or rename it in the current namespace.
     """
-    moveCampaign(campaign: ID!, newName: String, newNamespace: ID): Campaign!
+    moveCampaign(campaign: ID!, newName: String, newNamespace: ID): Campaign! @deprecated(reason: "campaigns have been renamed to batch changes. Use moveBatchChange instead.")
 
     """
     Close a campaign.
@@ -9728,6 +9728,11 @@ extend type Mutation {
         """
         closeChangesets: Boolean = false
     ): BatchChange!
+
+    """
+    Move a batch change to a different namespace, or rename it in the current namespace.
+    """
+    moveBatchChange(batchChange: ID!, newName: String, newNamespace: ID): BatchChange!
 }
 
 extend type Query {
